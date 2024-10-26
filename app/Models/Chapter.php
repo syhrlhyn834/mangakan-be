@@ -23,6 +23,12 @@ class Chapter extends Model
             get: fn ($value) => url('/storage/chapters/' . $value),
         );
     }
+    protected function content(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => filter_var($value, FILTER_VALIDATE_URL) ? $value : url('/storage/chapters_content/' . $value),
+        );
+    }
 /**
      * createdAt
      *
@@ -46,4 +52,5 @@ class Chapter extends Model
             get: fn ($value) => \Carbon\Carbon::parse($value)->translatedFormat('l, d F Y'),
         );
     }
+
 }
