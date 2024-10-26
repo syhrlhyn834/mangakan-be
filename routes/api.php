@@ -48,3 +48,58 @@ Route::prefix('admin')->group(function () {
     });
 
 });
+//group route with prefix "web"
+Route::prefix('web')->group(function () {
+
+    //index headers
+    Route::get('/headers', [App\Http\Controllers\Api\Web\HeaderController::class, 'index']);
+
+    //index headers
+    Route::get('/footers', [App\Http\Controllers\Api\Web\FooterController::class, 'index']);
+
+    //index authors
+    Route::get('/authors', [App\Http\Controllers\Api\Web\AuthorController::class, 'index']);
+
+    //show authors
+    Route::get('/authors/{slug}', [App\Http\Controllers\Api\Web\AuthorController::class, 'show']);
+
+    //index character
+    Route::get('/characters', [App\Http\Controllers\Api\Web\CharacterController::class, 'index']);
+
+    //show character
+    Route::get('/characters/{slug}', [App\Http\Controllers\Api\Web\CharacterController::class, 'show']);
+
+    //index genres
+    Route::get('/genres', [App\Http\Controllers\Api\Web\GenreController::class, 'index']);
+
+    //show genres
+    Route::get('/genres/{slug}', [App\Http\Controllers\Api\Web\GenreController::class, 'show']);
+
+    //index groups
+    Route::get('/groups', [App\Http\Controllers\Api\Web\GroupController::class, 'index']);
+
+    //show groups
+    Route::get('/groups/{slug}', [App\Http\Controllers\Api\Web\GroupController::class, 'show']);
+
+    //index mangas
+    Route::get('/mangas', [App\Http\Controllers\Api\Web\MangaController::class, 'index']);
+
+    //show mangas
+    Route::get('/mangas/{slug}', [App\Http\Controllers\Api\Web\MangaController::class, 'show']);
+
+    //index series
+    Route::get('/series', [App\Http\Controllers\Api\Web\SeriesController::class, 'index']);
+
+    //show series
+    Route::get('/series/{slug}', [App\Http\Controllers\Api\Web\SeriesController::class, 'show']);
+
+    //index types
+    Route::get('/types', [App\Http\Controllers\Api\Web\TypeController::class, 'index']);
+
+    //show types
+    Route::get('/types/{slug}', [App\Http\Controllers\Api\Web\TypeController::class, 'show']);
+
+
+    //index chapter
+    Route::get('/chapters', [App\Http\Controllers\Api\Web\ChapterController::class, 'index']);
+});
