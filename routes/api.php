@@ -44,6 +44,12 @@ Route::prefix('admin')->group(function () {
         //chapters
         Route::apiResource('/chapters', App\Http\Controllers\Api\Admin\ChapterController::class);
 
+        //headers
+        Route::apiResource('/headers', App\Http\Controllers\Api\Admin\HeaderController::class);
+
+        //footers
+        Route::apiResource('/footers', App\Http\Controllers\Api\Admin\FooterController::class);
+
         //dashboard
         Route::get('/dashboard', [App\Http\Controllers\Api\Admin\DashboardController::class, 'index']);
 
