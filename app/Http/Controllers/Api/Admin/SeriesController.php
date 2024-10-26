@@ -18,13 +18,13 @@ class SeriesController extends Controller
      */
     public function index()
     {
-        //get seriess
-        $seriess = Series::when(request()->q, function($seriess) {
-            $seriess = $seriess->where('name', 'like', '%'. request()->q . '%');
+        //get series
+        $series = Series::when(request()->q, function($series) {
+            $series = $series->where('name', 'like', '%'. request()->q . '%');
         })->latest()->paginate(5);
 
         //return with Api Resource
-        return new SeriesResource(true, 'List Data seriess', $seriess);
+        return new SeriesResource(true, 'List Data series', $series);
     }
 
     /**
@@ -36,7 +36,7 @@ class SeriesController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|unique:seriess',
+            'name'     => 'required|unique:series',
         ]);
 
         if ($validator->fails()) {
@@ -74,7 +74,7 @@ class SeriesController extends Controller
         }
 
         //return failed with Api Resource
-        return new SeriesResource(false, 'Detail Data series Tidak DItemukan!', null);
+        return new SeriesResource(false, 'Detail Data series Tidak Ditemukan!', null);
     }
 
     /**
@@ -87,7 +87,7 @@ class SeriesController extends Controller
     public function update(Request $request, Series $series)
     {
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|unique:seriess,name,'.$series->id,
+            'name'     => 'required|unique:series,name,'.$series->id,
         ]);
 
         if ($validator->fails()) {

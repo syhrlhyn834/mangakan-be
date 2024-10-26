@@ -14,8 +14,9 @@ class Chapter extends Model
 
     public function mangas()
     {
-        return $this->belongsToMany(Manga::class);
+        return $this->belongsTo(Manga::class); // jika satu chapter hanya milik satu manga
     }
+
 
     protected function image(): Attribute
     {
