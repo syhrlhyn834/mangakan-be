@@ -14,14 +14,18 @@ class ChapterController extends Controller
 {
     public function index()
     {
-        $chapters = Chapter::latest()->paginate(5);
-        return new ChapterResource(true, 'Data chapter', $chapters);
+        $chapters = Chapter::with('manga')->when(request()->q, function($chapters) {
+            $chapters = $chapters->where('title', 'like', '%'. request()->q . '%');
+        })->latest()->paginate(5);
+
+        //return with Api Resource
+        return new ChapterResource(true, 'List Data Chapter', $chapters);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'required|image|mimes:jpeg,jpg,png,webp,svg|max:2000',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,webp,svg|max:2000',
             'manga_id' => 'required|exists:mangas,id', // Validasi untuk memastikan manga_id valid
             'title' => 'required|unique:chapters',
             'chapter_number' => 'required|numeric',
@@ -61,11 +65,15 @@ class ChapterController extends Controller
 
     public function show($id)
     {
-        $chapter = Chapter::find($id);
-        if (!$chapter) {
-            return new ChapterResource(false, 'Data chapter Tidak Ditemukan', null);
+        $chapter = Chapter::with( 'manga')->whereId($id)->first();
+
+        if($chapter) {
+            //return success with Api Resource
+            return new ChapterResource(true, 'Detail Data chapter!', $chapter);
         }
-        return new ChapterResource(true, 'Detail Data Chapter', $chapter);
+
+        //return failed with Api Resource
+        return new ChapterResource(false, 'Detail Data chapter Tidak DItemukan!', null);
     }
 
     public function update(Request $request, Chapter $chapter)

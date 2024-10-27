@@ -110,4 +110,8 @@ Route::prefix('web')->group(function () {
 
     //index chapter
     Route::get('/chapters', [App\Http\Controllers\Api\Web\ChapterController::class, 'index']);
+
+    //show chapter
+    Route::get('/chapters/{slug}', [App\Http\Controllers\Api\Web\ChapterController::class, 'show']);
+
 });

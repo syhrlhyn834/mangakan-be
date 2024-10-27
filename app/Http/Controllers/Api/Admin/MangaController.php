@@ -19,7 +19,7 @@ class MangaController extends Controller
      */
     public function index()
     {
-        $mangas = Manga::with('characters', 'genres', 'chapters')->when(request()->q, function($mangas) {
+        $mangas = Manga::with('characters', 'genres', 'chapters', 'series','group', 'type', 'author')->when(request()->q, function($mangas) {
             $mangas = $mangas->where('title', 'like', '%'. request()->q . '%');
         })->latest()->paginate(5);
 
@@ -43,7 +43,7 @@ class MangaController extends Controller
             'series_id'   => 'required',
             'author_id'   => 'required',
             'group_id'   => 'required',
-            'status'     => 'required'
+            'status' => 'required|in:Published,Finished'
         ]);
 
         if ($validator->fails()) {
@@ -88,7 +88,7 @@ class MangaController extends Controller
      */
     public function show($id)
     {
-        $manga = Manga::with( 'characters', 'genres')->whereId($id)->first();
+        $manga = Manga::with( 'characters', 'genres', 'chapters', 'series','group', 'type', 'author')->whereId($id)->first();
 
         if($manga) {
             //return success with Api Resource

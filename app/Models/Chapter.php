@@ -12,10 +12,11 @@ class Chapter extends Model
         'manga_id', 'title', 'slug', 'chapter_number', 'content', 'image'
     ];
 
-    public function mangas()
+    public function manga()
     {
-        return $this->belongsTo(Manga::class); // jika satu chapter hanya milik satu manga
+        return $this->belongsTo(Manga::class);
     }
+
 
 
     protected function image(): Attribute

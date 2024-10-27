@@ -16,12 +16,13 @@ class MangaController extends Controller
      */
     public function index()
     {
-        $mangas = Manga::paginate(9);
+        $mangas = Manga::with('characters', 'genres', 'chapters', 'series','group', 'type', 'author')->when(request()->q, function($mangas) {
+            $mangas = $mangas->where('title', 'like', '%'. request()->q . '%');
+        })->latest()->paginate(9);
 
         //return with Api Resource
-        return new MangaResource(true, 'Data Manga', $mangas);
+        return new MangaResource(true, 'List Data Manga', $mangas);
     }
-
     /**
      * show
      *
@@ -30,7 +31,7 @@ class MangaController extends Controller
      */
     public function show($slug)
     {
-        $manga = Manga::with('characters', 'genres', 'chapters')->where('slug', $slug)->first();
+        $manga = Manga::with('characters', 'genres', 'chapters', 'series','group', 'type', 'author' )->where('slug', $slug)->first();
 
         if($manga) {
             //return with Api Resource

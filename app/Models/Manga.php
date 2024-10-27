@@ -31,7 +31,7 @@ class Manga extends Model
         return $this->hasMany(Chapter::class);
     }
 
-    public function groups()
+    public function group()
     {
         return $this->belongsTo(Group::class);
     }
@@ -41,12 +41,12 @@ class Manga extends Model
         return $this->belongsTo(Series::class);
     }
 
-    public function authors()
+    public function author()
     {
         return $this->belongsTo(Author::class);
     }
 
-    public function types()
+    public function type()
     {
         return $this->belongsTo(Type::class);
     }
