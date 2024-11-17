@@ -79,7 +79,7 @@ class ChapterController extends Controller
     public function update(Request $request, Chapter $chapter)
 {
     $validator = Validator::make($request->all(), [
-        'image' => 'nullable|image|mimes:jpeg,jpg,png,webp,svg|max:2000',
+        'image' => 'nullable|file|mimes:jpeg,jpg,png,webp,svg|max:2000',
         'manga_id' => 'required|exists:mangas,id',
         'title' => 'required|unique:chapters,title,' . $chapter->id,
         'chapter_number' => 'required|numeric',
@@ -88,11 +88,12 @@ class ChapterController extends Controller
     ]);
 
     if ($validator->fails()) {
-        return response()->json($validator->errors(), 422);
+        return response()->json(['errors' => $validator->errors()], 422);
     }
 
+
     if ($request->hasFile('content')) {
-        Storage::disk('local')->delete('public/chapters_content/'.basename($chapter->content));
+        Storage::disk('local')->delete('public/chapters_content/' . basename($chapter->content));
         $content = $request->file('content');
         $content->storeAs('public/chapters_content', $content->hashName());
         $chapter->content = $content->hashName();
@@ -101,19 +102,21 @@ class ChapterController extends Controller
     }
 
     if ($request->hasFile('image')) {
-        Storage::disk('local')->delete('public/chapters/'.basename($chapter->image));
+        Storage::disk('local')->delete('public/chapters/' . basename($chapter->image));
         $image = $request->file('image');
         $image->storeAs('public/chapters', $image->hashName());
         $chapter->image = $image->hashName();
     }
 
+    // Simpan data lainnya
     $chapter->update([
         'manga_id' => $request->manga_id,
         'title' => $request->title,
         'slug' => Str::slug($request->title, '-'),
         'chapter_number' => $request->chapter_number,
-        'content' => $chapter->content, // Tetap gunakan content yang sudah diset
+        'content' => $chapter->content, // Pastikan ini selalu digunakan
     ]);
+
 
     return new ChapterResource(true, 'Data chapter Berhasil Diupdate!', $chapter);
 }

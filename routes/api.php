@@ -93,6 +93,9 @@ Route::prefix('web')->group(function () {
     //index mangas
     Route::get('/mangas', [App\Http\Controllers\Api\Web\MangaController::class, 'index']);
 
+    //index mangas
+    Route::get('/filterSearch', [App\Http\Controllers\Api\Web\MangaController::class, 'filterSearch']);
+
     //show mangas
     Route::get('/mangas/{slug}', [App\Http\Controllers\Api\Web\MangaController::class, 'show']);
 
