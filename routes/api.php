@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 //group route with prefix "admin"
 Route::prefix('admin')->group(function () {
 
@@ -94,6 +95,18 @@ Route::prefix('web')->group(function () {
 
     //show mangas
     Route::get('/mangas/{slug}', [App\Http\Controllers\Api\Web\MangaController::class, 'show']);
+
+    Route::get('/manhwaHome', [App\Http\Controllers\Api\Web\MangaController::class, 'manhwaHome']);
+
+    Route::get('/doujinHome', [App\Http\Controllers\Api\Web\MangaController::class, 'doujinHome']);
+
+    Route::get('/mangaHome', [App\Http\Controllers\Api\Web\MangaController::class, 'mangaHome']);
+
+    Route::get('/mangaPublishing', [App\Http\Controllers\Api\Web\MangaController::class, 'mangaPublishing']);
+
+    Route::get('/mangaFinished', [App\Http\Controllers\Api\Web\MangaController::class, 'mangaFinished']);
+
+    Route::get('/doujinmangaHome', [App\Http\Controllers\Api\Web\MangaController::class, 'doujinmangaHome']);
 
     //index series
     Route::get('/series', [App\Http\Controllers\Api\Web\SeriesController::class, 'index']);

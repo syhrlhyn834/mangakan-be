@@ -11,29 +11,31 @@ class GroupController extends Controller
 {
     public function index()
     {
-        $authors = Group::all();
+        $authors = Group::with('mangas')->get();
 
         //return with Api Resource
         return new GroupResource(true, 'Data Group', $authors);
     }
 
-    /**
-     * show
-     *
-     * @param  mixed $slug
-     * @return void
-     */
     public function show($slug)
-    {
-        $group = Group::with('mangas.groups')->where('slug', $slug)->first();
+{
+    $genre = Group::where('slug', $slug)->first();
 
-        if($group) {
-            //return with Api Resource
-            return new GroupResource(true, 'List Data Manga By Group', $group);
-        }
+    if ($genre) {
+        // Mengambil mangas dengan paginate dan memuat relasi
+        $mangas = $genre->mangas()
+                        ->with('type', 'chapters', 'genres') // Memuat relasi yang diperlukan
+                        ->paginate(9);  // Misalnya 10 manga per halaman
 
-        //return with Api Resource
-        return new GroupResource(false, 'Data Group Tidak Ditemukan!', null);
+        // Mengupdate genre dengan mangas yang sudah dipaginate
+        $genre->setRelation('mangas', $mangas);
+
+        // Mengembalikan data menggunakan Api Resource
+        return new GroupResource(true, 'List Data Manga By Group', $genre);
     }
+
+    // Jika genre tidak ditemukan, mengembalikan pesan error
+    return new GroupResource(false, 'Data Group Tidak Ditemukan!', null);
+}
 }
 

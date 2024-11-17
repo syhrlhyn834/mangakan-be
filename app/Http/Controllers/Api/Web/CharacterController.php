@@ -11,7 +11,7 @@ class CharacterController extends Controller
 {
     public function index()
     {
-        $characters = Character::all();
+        $characters = Character::with('mangas')->get();
 
         //return with Api Resource
         return new CharacterResource(true, 'Data Character', $characters);
@@ -25,14 +25,22 @@ class CharacterController extends Controller
      */
     public function show($slug)
     {
-        $author = Character::with('mangas.characters')->where('slug', $slug)->first();
+        $genre = Character::where('slug', $slug)->first();
 
-        if($author) {
-            //return with Api Resource
-            return new CharacterResource(true, 'List Data Mangas By Character', $author);
+        if ($genre) {
+            // Mengambil mangas dengan paginate dan memuat relasi
+            $mangas = $genre->mangas()
+                            ->with('type', 'chapters', 'genres') // Memuat relasi yang diperlukan
+                            ->paginate(9);  // Misalnya 10 manga per halaman
+
+            // Mengupdate genre dengan mangas yang sudah dipaginate
+            $genre->setRelation('mangas', $mangas);
+
+            // Mengembalikan data menggunakan Api Resource
+            return new CharacterResource(true, 'List Data Manga By Character', $genre);
         }
 
-        //return with Api Resource
+        // Jika genre tidak ditemukan, mengembalikan pesan error
         return new CharacterResource(false, 'Data Character Tidak Ditemukan!', null);
     }
 }

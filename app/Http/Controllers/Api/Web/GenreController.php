@@ -11,7 +11,7 @@ class GenreController extends Controller
 {
     public function index()
     {
-        $genres = Genre::all();
+        $genres = Genre::with('mangas')->get();
 
         //return with Api Resource
         return new GenreResource(true, 'Data Genre', $genres);
@@ -24,15 +24,24 @@ class GenreController extends Controller
      * @return void
      */
     public function show($slug)
-    {
-        $genre = Genre::with('mangas.genres')->where('slug', $slug)->first();
+{
+    $genre = Genre::where('slug', $slug)->first();
 
-        if($genre) {
-            //return with Api Resource
-            return new GenreResource(true, 'List Data Manga By Genre', $genre);
-        }
+    if ($genre) {
+        // Mengambil mangas dengan paginate dan memuat relasi
+        $mangas = $genre->mangas()
+                        ->with('type', 'chapters', 'genres') // Memuat relasi yang diperlukan
+                        ->paginate(9);  // Misalnya 10 manga per halaman
 
-        //return with Api Resource
-        return new GenreResource(false, 'Data Genre Tidak Ditemukan!', null);
+        // Mengupdate genre dengan mangas yang sudah dipaginate
+        $genre->setRelation('mangas', $mangas);
+
+        // Mengembalikan data menggunakan Api Resource
+        return new GenreResource(true, 'List Data Manga By Genre', $genre);
     }
+
+    // Jika genre tidak ditemukan, mengembalikan pesan error
+    return new GenreResource(false, 'Data Genre Tidak Ditemukan!', null);
+}
+
 }

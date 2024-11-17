@@ -11,7 +11,7 @@ class SeriesController extends Controller
 {
     public function index()
     {
-        $series = Series::all();
+        $series = Series::with('mangas')->get();
 
         //return with Api Resource
         return new SeriesResource(true, 'Data Series', $series);
@@ -24,15 +24,23 @@ class SeriesController extends Controller
      * @return void
      */
     public function show($slug)
-    {
-        $series = Series::with('mangas.series')->where('slug', $slug)->first();
+{
+    $genre = Series::where('slug', $slug)->first();
 
-        if($series) {
-            //return with Api Resource
-            return new SeriesResource(true, 'List Data Manga By Series', $series);
-        }
+    if ($genre) {
+        // Mengambil mangas dengan paginate dan memuat relasi
+        $mangas = $genre->mangas()
+                        ->with('type', 'chapters', 'genres') // Memuat relasi yang diperlukan
+                        ->paginate(9);  // Misalnya 10 manga per halaman
 
-        //return with Api Resource
-        return new SeriesResource(false, 'Data Series Tidak Ditemukan!', null);
+        // Mengupdate genre dengan mangas yang sudah dipaginate
+        $genre->setRelation('mangas', $mangas);
+
+        // Mengembalikan data menggunakan Api Resource
+        return new SeriesResource(true, 'List Data Manga By Series', $genre);
     }
+
+    // Jika genre tidak ditemukan, mengembalikan pesan error
+    return new SeriesResource(false, 'Data Series Tidak Ditemukan!', null);
+}
 }

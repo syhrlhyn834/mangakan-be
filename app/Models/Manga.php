@@ -66,7 +66,7 @@ class Manga extends Model
     protected function createdAt(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => \Carbon\Carbon::parse($value)->translatedFormat('l, d F Y'),
+            get: fn ($value) => Carbon::parse($value)->locale('id')->translatedFormat('l, d F Y'),
         );
     }
 
@@ -78,7 +78,7 @@ class Manga extends Model
     protected function updatedAt(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => \Carbon\Carbon::parse($value)->translatedFormat('l, d F Y'),
+            get: fn ($value) => Carbon::parse($value)->locale('id')->translatedFormat('l, d F Y'),
         );
     }
 }

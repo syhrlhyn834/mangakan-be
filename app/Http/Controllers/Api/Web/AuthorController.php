@@ -11,10 +11,10 @@ class AuthorController extends Controller
 {
     public function index()
     {
-        $authors = Author::all();
+        $characters = Author::with('mangas')->get();
 
         //return with Api Resource
-        return new AuthorResource(true, 'Data Author', $authors);
+        return new AuthorResource(true, 'Data Author', $characters);
     }
 
     /**
@@ -25,14 +25,22 @@ class AuthorController extends Controller
      */
     public function show($slug)
     {
-        $author = Author::with('mangas.authors')->where('slug', $slug)->first();
+        $genre = Author::where('slug', $slug)->first();
 
-        if($author) {
-            //return with Api Resource
-            return new AuthorResource(true, 'List Data Manga By Author', $author);
+        if ($genre) {
+            // Mengambil mangas dengan paginate dan memuat relasi
+            $mangas = $genre->mangas()
+                            ->with('type', 'chapters', 'genres') // Memuat relasi yang diperlukan
+                            ->paginate(9);  // Misalnya 10 manga per halaman
+
+            // Mengupdate genre dengan mangas yang sudah dipaginate
+            $genre->setRelation('mangas', $mangas);
+
+            // Mengembalikan data menggunakan Api Resource
+            return new AuthorResource(true, 'List Data Manga By Author', $genre);
         }
 
-        //return with Api Resource
-        return new AuthorResource(false, 'Data Author Tidak Ditemukan!', null);
+        // Jika genre tidak ditemukan, mengembalikan pesan error
+        return new AuthorResource(false, 'Data Authpr Tidak Ditemukan!', null);
     }
 }
