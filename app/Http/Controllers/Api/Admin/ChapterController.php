@@ -77,52 +77,47 @@ class ChapterController extends Controller
     }
 
     public function update(Request $request, Chapter $chapter)
-    {
+{
+    $validator = Validator::make($request->all(), [
+        'image' => 'nullable|image|mimes:jpeg,jpg,png,webp,svg|max:2000',
+        'manga_id' => 'required|exists:mangas,id',
+        'title' => 'required|unique:chapters,title,' . $chapter->id,
+        'chapter_number' => 'required|numeric',
+        'content' => 'nullable|file|mimes:pdf,cbz',
+        'url' => 'nullable|url',
+    ]);
 
-        $validator = Validator::make($request->all(), [
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,webp,svg|max:2000',
-            'manga_id' => 'required|exists:mangas,id', // Validasi untuk memastikan manga_id valid
-            'title' => 'required|unique:chapters,title',
-            'chapter_number' => 'required|numeric',
-            'content' => 'required_without:url|file|mimes:pdf,cbz',
-            'url' => 'required_without:content|url'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        // Update image jika ada
-        if ($request->file('image')) {
-            Storage::disk('local')->delete('public/chapters/'.basename($chapter->image));
-            $image = $request->file('image');
-            $image->storeAs('public/chapters', $image->hashName());
-            $chapter->image = $image->hashName();
-        }
-
-        // Update `content` jika ada file baru atau URL baru
-        if ($request->hasFile('content')) {
-            Storage::disk('local')->delete('public/chapters_content/'.basename($chapter->content));
-            $content = $request->file('content');
-            $content->storeAs('public/chapters_content', $content->hashName());
-            $contentPath = $content->hashName();
-        } elseif ($request->url) {
-            $contentPath = $request->url;
-        } else {
-            $contentPath = $chapter->content; // Pertahankan konten lama jika tidak ada perubahan
-        }
-
-        // Update data chapter
-        $chapter->update([
-            'manga_id' => $request->manga_id,
-            'title' => $request->title,
-            'slug' => Str::slug($request->title, '-'),
-            'chapter_number' => $request->chapter_number,
-            'content' => $contentPath,
-        ]);
-
-        return new ChapterResource(true, 'Data chapter Berhasil Diupdate!', $chapter);
+    if ($validator->fails()) {
+        return response()->json($validator->errors(), 422);
     }
+
+    if ($request->hasFile('content')) {
+        Storage::disk('local')->delete('public/chapters_content/'.basename($chapter->content));
+        $content = $request->file('content');
+        $content->storeAs('public/chapters_content', $content->hashName());
+        $chapter->content = $content->hashName();
+    } elseif ($request->url) {
+        $chapter->content = $request->url;
+    }
+
+    if ($request->hasFile('image')) {
+        Storage::disk('local')->delete('public/chapters/'.basename($chapter->image));
+        $image = $request->file('image');
+        $image->storeAs('public/chapters', $image->hashName());
+        $chapter->image = $image->hashName();
+    }
+
+    $chapter->update([
+        'manga_id' => $request->manga_id,
+        'title' => $request->title,
+        'slug' => Str::slug($request->title, '-'),
+        'chapter_number' => $request->chapter_number,
+        'content' => $chapter->content, // Tetap gunakan content yang sudah diset
+    ]);
+
+    return new ChapterResource(true, 'Data chapter Berhasil Diupdate!', $chapter);
+}
+
 
     public function destroy(Chapter $chapter)
 {
