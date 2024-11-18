@@ -112,14 +112,20 @@ public function filterSearch(Request $request)
     });
 })
 
-        // Filter berdasarkan order (A-Z, Z-A)
-        ->when($request->order, function ($query) use ($request) {
-            if ($request->order == 'A-Z') {
-                $query->orderBy('title', 'asc');
-            } elseif ($request->order == 'Z-A') {
-                $query->orderBy('title', 'desc');
-            }
-        })
+        // Filter berdasarkan order (A-Z, Z-A, Latest Update, Latest Added)
+->when($request->order, function ($query) use ($request) {
+    if ($request->order == 'A-Z') {
+        $query->orderBy('title', 'asc'); // Order by title alphabetically in ascending order
+    } elseif ($request->order == 'Z-A') {
+        $query->orderBy('title', 'desc'); // Order by title alphabetically in descending order
+    } elseif ($request->order == 'Latest Update') {
+        $query->where('updated_at', '>=', now()->subHours(5)); // Filter by last 10 hours of updates
+    } elseif ($request->order == 'Latest Added') {
+        $query->where('created_at', '>=', now()->subHours(5)); // Filter by last 10 hours of additions
+    }
+})
+
+
         // Pastikan manga memiliki chapter
         ->whereHas('chapters', function ($query) {
             $query->where('id', '>', 0); // Pastikan manga memiliki chapter
