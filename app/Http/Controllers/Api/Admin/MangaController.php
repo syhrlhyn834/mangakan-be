@@ -43,7 +43,7 @@ class MangaController extends Controller
             'series_id'   => 'required',
             'author_id'   => 'required',
             'group_id'   => 'required',
-            'status' => 'required|in:Published,Finished'
+            'status' => 'required|in:Publishing,Finished'
         ]);
 
         if ($validator->fails()) {
