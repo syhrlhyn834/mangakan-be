@@ -15,6 +15,8 @@ Route::prefix('admin')->group(function () {
         //data user
         Route::get('/user', [App\Http\Controllers\Api\Admin\LoginController::class, 'getUser']);
 
+        Route::apiResource('/users', App\Http\Controllers\Api\Admin\UserController::class);
+
         //refresh token JWT
         Route::get('/refresh', [App\Http\Controllers\Api\Admin\LoginController::class, 'refreshToken']);
 
