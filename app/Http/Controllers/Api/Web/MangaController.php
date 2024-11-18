@@ -119,9 +119,9 @@ public function filterSearch(Request $request)
     } elseif ($request->order == 'Z-A') {
         $query->orderBy('title', 'desc'); // Order by title alphabetically in descending order
     } elseif ($request->order == 'Latest Update') {
-        $query->where('updated_at', '>=', now()->subHours(5)); // Filter by last 10 hours of updates
+        $query->where('updated_at', '>=', now()->subHours(10)); // Filter by last 10 hours of updates
     } elseif ($request->order == 'Latest Added') {
-        $query->where('created_at', '>=', now()->subHours(5)); // Filter by last 10 hours of additions
+        $query->where('created_at', '>=', now()->subHours(10)); // Filter by last 10 hours of additions
     }
 })
 
