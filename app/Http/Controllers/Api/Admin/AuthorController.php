@@ -27,6 +27,19 @@ class AuthorController extends Controller
         return new AuthorResource(true, 'List Data authors', $authors);
     }
 
+    public function authorView()
+    {
+        // Get genres with optional search query
+        $genres = Author::when(request()->q, function($query) {
+            return $query->where('name', 'like', '%'. request()->q . '%');
+        })
+        ->latest()  // Sort by the latest
+        ->get();  // Get the results
+
+        // Return response with API Resource
+        return new AuthorResource(true, 'List Data authors', $genres);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

@@ -27,6 +27,20 @@ class GenreController extends Controller
         return new GenreResource(true, 'List Data genres', $genres);
     }
 
+    public function genresView()
+    {
+        // Get genres with optional search query
+        $genres = Genre::when(request()->q, function($query) {
+            return $query->where('name', 'like', '%'. request()->q . '%');
+        })
+        ->latest()  // Sort by the latest
+        ->get();  // Get the results
+
+        // Return response with API Resource
+        return new GenreResource(true, 'List Data genres', $genres);
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *

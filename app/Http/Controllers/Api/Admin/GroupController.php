@@ -27,6 +27,18 @@ class GroupController extends Controller
         return new GroupResource(true, 'List Data groups', $groups);
     }
 
+    public function groupView()
+    {
+        // Get genres with optional search query
+        $genres = Group::when(request()->q, function($query) {
+            return $query->where('name', 'like', '%'. request()->q . '%');
+        })
+        ->latest()  // Sort by the latest
+        ->get();  // Get the results
+
+        // Return response with API Resource
+        return new GroupResource(true, 'List Data groups', $genres);
+    }
     /**
      * Store a newly created resource in storage.
      *

@@ -27,6 +27,18 @@ class MangaController extends Controller
         return new MangaResource(true, 'List Data mangas', $mangas);
     }
 
+    public function mangaView()
+    {
+        // Get genres with optional search query
+        $genres = Manga::when(request()->q, function($query) {
+            return $query->where('name', 'like', '%'. request()->q . '%');
+        })
+        ->latest()  // Sort by the latest
+        ->get();  // Get the results
+
+        // Return response with API Resource
+        return new MangaResource(true, 'List Data mangas', $genres);
+    }
     /**
      * Store a newly created resource in storage.
      *

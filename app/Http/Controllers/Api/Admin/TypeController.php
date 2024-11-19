@@ -27,6 +27,19 @@ class TypeController extends Controller
         return new TypeResource(true, 'List Data types', $types);
     }
 
+    public function typeView()
+    {
+        // Get genres with optional search query
+        $genres = Type::when(request()->q, function($query) {
+            return $query->where('name', 'like', '%'. request()->q . '%');
+        })
+        ->latest()  // Sort by the latest
+        ->get();  // Get the results
+
+        // Return response with API Resource
+        return new TypeResource(true, 'List Data types', $genres);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

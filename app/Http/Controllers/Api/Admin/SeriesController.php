@@ -27,6 +27,18 @@ class SeriesController extends Controller
         return new SeriesResource(true, 'List Data series', $series);
     }
 
+    public function seriesView()
+    {
+        // Get genres with optional search query
+        $genres = Series::when(request()->q, function($query) {
+            return $query->where('name', 'like', '%'. request()->q . '%');
+        })
+        ->latest()  // Sort by the latest
+        ->get();  // Get the results
+
+        // Return response with API Resource
+        return new SeriesResource(true, 'List Data series', $genres);
+    }
     /**
      * Store a newly created resource in storage.
      *
