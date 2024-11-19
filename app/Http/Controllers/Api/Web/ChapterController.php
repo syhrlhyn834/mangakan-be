@@ -19,7 +19,7 @@ class ChapterController extends Controller
 
     public function show($slug)
     {
-        $chapter = Chapter::with('manga')->where('slug', $slug)->first();
+        $chapter = Chapter::with('manga.chapters')->where('slug', $slug)->first();
 
         if($chapter) {
             //return with Api Resource
