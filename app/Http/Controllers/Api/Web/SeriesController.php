@@ -31,7 +31,7 @@ class SeriesController extends Controller
         // Mengambil mangas dengan paginate dan memuat relasi
         $mangas = $genre->mangas()
                         ->with('type', 'chapters', 'genres') // Memuat relasi yang diperlukan
-                        ->paginate(9);  // Misalnya 10 manga per halaman
+                        ->paginate(18);  // Misalnya 10 manga per halaman
 
         // Mengupdate genre dengan mangas yang sudah dipaginate
         $genre->setRelation('mangas', $mangas);
