@@ -2,13 +2,12 @@
 
 use App\Http\Controllers\Api\Admin\AuthorController;
 use App\Http\Controllers\Api\Admin\CharacterController;
-use App\Http\Controllers\Api\admin\GenreController;
+use App\Http\Controllers\Api\Admin\GenreController;
 use App\Http\Controllers\Api\Admin\GroupController;
 use App\Http\Controllers\Api\Admin\MangaController;
 use App\Http\Controllers\Api\Admin\SeriesController;
 use App\Http\Controllers\Api\Admin\TypeController;
 use Illuminate\Support\Facades\Route;
-
 
 
 //group route with prefix "admin"
@@ -54,12 +53,12 @@ Route::prefix('admin')->group(function () {
         Route::apiResource('/genres', App\Http\Controllers\Api\Admin\GenreController::class);
 
         //show genres
-        Route::get('/genresView', [GenreController::class, 'genresView']);
         Route::get('/authorsView', [AuthorController::class, 'authorView']);
         Route::get('/charactersView', [CharacterController::class, 'characterView']);
         Route::get('/groupsView', [GroupController::class, 'groupView']);
         Route::get('/mangasView', [MangaController::class, 'mangaView']);
         Route::get('/seriesView', [SeriesController::class, 'seriesView']);
+        Route::get('/genresView', [GenreController::class, 'genresView']);
         Route::get('/typesView', [TypeController::class, 'typeView']);
 
         //chapters
