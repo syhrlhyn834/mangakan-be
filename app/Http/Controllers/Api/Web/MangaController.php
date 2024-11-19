@@ -53,8 +53,8 @@ class MangaController extends Controller
         })
         // Urutkan berdasarkan yang terbaru
         ->latest()
-        // Pagination, 9 manga per halaman
-        ->paginate(9);
+        // Pagination, 18 manga per halaman
+        ->paginate(18);
 
     // Mengembalikan data dengan Api Resource
     return new MangaResource(true, 'List Data Manga', $query);
@@ -132,8 +132,8 @@ public function filterSearch(Request $request)
         })
         // Urutkan berdasarkan yang terbaru
         ->latest()
-        // Pagination, 9 manga per halaman
-        ->paginate(9);
+        // Pagination, 18 manga per halaman
+        ->paginate(18);
 
     return new MangaResource(true, 'List Data Manga', $query);
 }
@@ -154,7 +154,7 @@ public function filterSearch(Request $request)
                 $query->where('id', '>', 0); // Pastikan manga memiliki chapter
             })
             ->latest()
-            ->paginate(9);
+            ->paginate(18);
 
         //return with Api Resource
         return new MangaResource(true, 'List Data Manhwa', $mangas);
@@ -174,7 +174,7 @@ public function filterSearch(Request $request)
                 $query->where('id', '>', 0); // Pastikan manga memiliki chapter
             })
             ->latest()
-            ->paginate(9);
+            ->paginate(18);
 
         //return with Api Resource
         return new MangaResource(true, 'List Data Doujin', $mangas);
@@ -194,7 +194,7 @@ public function filterSearch(Request $request)
                 $query->where('id', '>', 0); // Pastikan manga memiliki chapter
             })
             ->latest()
-            ->paginate(9);
+            ->paginate(18);
 
         //return with Api Resource
         return new MangaResource(true, 'List Data Manga', $mangas);
@@ -214,7 +214,7 @@ public function filterSearch(Request $request)
                 $query->where('id', '>', 0); // Pastikan manga memiliki chapter
             })
             ->latest()
-            ->paginate(9);
+            ->paginate(18);
 
         //return with Api Resource
         return new MangaResource(true, 'List Data Manga', $mangas);
@@ -234,7 +234,7 @@ public function filterSearch(Request $request)
                 $query->where('id', '>', 0); // Pastikan manga memiliki chapter
             })
             ->latest()
-            ->paginate(9);
+            ->paginate(18);
 
         //return with Api Resource
         return new MangaResource(true, 'List Data Manga', $mangas);
@@ -254,7 +254,7 @@ public function filterSearch(Request $request)
                 $query->where('id', '>', 0); // Pastikan manga memiliki chapter
             })
             ->latest()
-            ->paginate(9);
+            ->paginate(18);
 
         //return with Api Resource
         return new MangaResource(true, 'List Data Manga', $mangas);
