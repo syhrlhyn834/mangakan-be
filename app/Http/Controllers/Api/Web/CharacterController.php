@@ -11,8 +11,12 @@ class CharacterController extends Controller
 {
     public function index()
     {
-        $characters = Character::with('mangas')->get();
-
+        $characters = Character::with(['mangas' => function ($query) {
+            // Pastikan manga memiliki chapter yang valid
+            $query->whereHas('chapters', function ($chapterQuery) {
+                $chapterQuery->where('id', '>', 0); // Pastikan manga memiliki chapter
+            });
+        }])->get();
         //return with Api Resource
         return new CharacterResource(true, 'Data Character', $characters);
     }
@@ -30,7 +34,10 @@ class CharacterController extends Controller
         if ($genre) {
             // Mengambil mangas dengan paginate dan memuat relasi
             $mangas = $genre->mangas()
-                            ->with('type', 'chapters', 'genres') // Memuat relasi yang diperlukan
+                            ->with('chapters', 'genres') // Memuat relasi yang diperlukan
+                            ->whereHas('chapters', function ($query) {
+                                $query->where('id', '>', 0); // Pastikan manga memiliki chapter
+                            })
                             ->paginate(18);  // Misalnya 10 manga per halaman
 
             // Mengupdate genre dengan mangas yang sudah dipaginate

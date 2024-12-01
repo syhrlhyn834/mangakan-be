@@ -26,7 +26,7 @@ class ChapterController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'image' => 'nullable|image|mimes:jpeg,jpg,png,webp,svg|max:2000',
-            'manga_id' => 'required|exists:mangas,id', // Validasi untuk memastikan manga_id valid
+            'manga_id' => 'required|exists:mangas,id',
             'title' => 'required|unique:chapters',
             'chapter_number' => 'required|numeric',
             'content' => 'required_without:url|file|mimes:pdf,cbz',

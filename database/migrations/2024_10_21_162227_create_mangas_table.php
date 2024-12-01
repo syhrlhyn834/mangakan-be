@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->unsignedInteger('type_id');
             $table->unsignedInteger('series_id');
             $table->unsignedInteger('author_id');
             $table->unsignedInteger('group_id');

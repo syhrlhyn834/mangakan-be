@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\Admin\GenreController;
 use App\Http\Controllers\Api\Admin\GroupController;
 use App\Http\Controllers\Api\Admin\MangaController;
 use App\Http\Controllers\Api\Admin\SeriesController;
-use App\Http\Controllers\Api\Admin\TypeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -31,8 +30,7 @@ Route::prefix('admin')->group(function () {
         //logout
         Route::post('/logout', [App\Http\Controllers\Api\Admin\LoginController::class, 'logout']);
 
-        //Type
-        Route::apiResource('/types', App\Http\Controllers\Api\Admin\TypeController::class);
+
 
         //Author
         Route::apiResource('/authors', App\Http\Controllers\Api\Admin\AuthorController::class);
@@ -59,7 +57,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/mangasView', [MangaController::class, 'mangaView']);
         Route::get('/seriesView', [SeriesController::class, 'seriesView']);
         Route::get('/genresView', [GenreController::class, 'genresView']);
-        Route::get('/typesView', [TypeController::class, 'typeView']);
+
 
         //chapters
         Route::apiResource('/chapters', App\Http\Controllers\Api\Admin\ChapterController::class);
@@ -136,11 +134,7 @@ Route::prefix('web')->group(function () {
     //show series
     Route::get('/series/{slug}', [App\Http\Controllers\Api\Web\SeriesController::class, 'show']);
 
-    //index types
-    Route::get('/types', [App\Http\Controllers\Api\Web\TypeController::class, 'index']);
 
-    //show types
-    Route::get('/types/{slug}', [App\Http\Controllers\Api\Web\TypeController::class, 'show']);
 
 
     //index chapter

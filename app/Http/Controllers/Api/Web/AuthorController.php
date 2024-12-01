@@ -10,12 +10,17 @@ use Illuminate\Http\Request;
 class AuthorController extends Controller
 {
     public function index()
-    {
-        $characters = Author::with('mangas')->get();
+{
+    $authors = Author::with(['mangas' => function ($query) {
+        // Pastikan manga memiliki chapter yang valid
+        $query->whereHas('chapters', function ($chapterQuery) {
+            $chapterQuery->where('id', '>', 0); // Pastikan manga memiliki chapter
+        });
+    }])->get();
 
-        //return with Api Resource
-        return new AuthorResource(true, 'Data Author', $characters);
-    }
+    // Return with Api Resource
+    return new AuthorResource(true, 'Data Author', $authors);
+}
 
     /**
      * show
@@ -24,23 +29,27 @@ class AuthorController extends Controller
      * @return void
      */
     public function show($slug)
-    {
-        $genre = Author::where('slug', $slug)->first();
+{
+    $author = Author::where('slug', $slug)->first();
 
-        if ($genre) {
-            // Mengambil mangas dengan paginate dan memuat relasi
-            $mangas = $genre->mangas()
-                            ->with('type', 'chapters', 'genres') // Memuat relasi yang diperlukan
-                            ->paginate(18);  // Misalnya 10 manga per halaman
+    if ($author) {
+        // Memuat manga dengan filter chapter yang lebih dari 0
+        $mangas = $author->mangas()
+                         ->with('chapters', 'genres') // Memuat relasi yang diperlukan
+                         ->whereHas('chapters', function ($query) {
+                             $query->where('id', '>', 0); // Pastikan manga memiliki chapter
+                         })
+                         ->paginate(18); // Misalnya 18 manga per halaman
 
-            // Mengupdate genre dengan mangas yang sudah dipaginate
-            $genre->setRelation('mangas', $mangas);
+        // Mengupdate author dengan mangas yang sudah dipaginate
+        $author->setRelation('mangas', $mangas);
 
-            // Mengembalikan data menggunakan Api Resource
-            return new AuthorResource(true, 'List Data Manga By Author', $genre);
-        }
-
-        // Jika genre tidak ditemukan, mengembalikan pesan error
-        return new AuthorResource(false, 'Data Authpr Tidak Ditemukan!', null);
+        // Mengembalikan data menggunakan Api Resource
+        return new AuthorResource(true, 'List Data Manga By Author', $author);
     }
+
+    // Jika author tidak ditemukan, mengembalikan pesan error
+    return new AuthorResource(false, 'Data Author Tidak Ditemukan!', null);
+}
+
 }

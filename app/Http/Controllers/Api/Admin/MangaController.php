@@ -19,7 +19,7 @@ class MangaController extends Controller
      */
     public function index()
     {
-        $mangas = Manga::with('characters', 'genres', 'chapters', 'series','group', 'type', 'author')->when(request()->q, function($mangas) {
+        $mangas = Manga::with('characters', 'genres', 'chapters', 'series','group', 'author')->when(request()->q, function($mangas) {
             $mangas = $mangas->where('title', 'like', '%'. request()->q . '%');
         })->latest()->paginate(5);
 
@@ -51,7 +51,6 @@ class MangaController extends Controller
             'image'         => 'required|image|mimes:jpeg,jpg,png|max:2000',
             'title'         => 'required|unique:mangas',
             'description'   => 'required',
-            'type_id'   => 'required',
             'series_id'   => 'required',
             'author_id'   => 'required',
             'group_id'   => 'required',
@@ -71,7 +70,6 @@ class MangaController extends Controller
             'title'       => $request->title,
             'slug'        => Str::slug($request->title, '-'),
             'description'     => $request->description,
-            'type_id' => $request->type_id,
             'series_id' => $request->series_id,
             'author_id' => $request->author_id,
             'group_id' => $request->group_id,
@@ -100,7 +98,7 @@ class MangaController extends Controller
      */
     public function show($id)
     {
-        $manga = Manga::with( 'characters', 'genres', 'chapters', 'series','group', 'type', 'author')->whereId($id)->first();
+        $manga = Manga::with( 'characters', 'genres', 'chapters', 'series','group', 'author')->whereId($id)->first();
 
         if($manga) {
             //return success with Api Resource
@@ -123,7 +121,6 @@ class MangaController extends Controller
         $validator = Validator::make($request->all(), [
             'title'         => 'required|unique:mangas,title,'.$manga->id,
             'description'   => 'required',
-            'type_id'   => 'required',
             'series_id'   => 'required',
             'author_id'   => 'required',
             'group_id'   => 'required',
@@ -149,7 +146,6 @@ class MangaController extends Controller
             'title'       => $request->title,
             'slug'        => Str::slug($request->title, '-'),
             'description'     => $request->description,
-            'type_id' => $request->type_id,
             'series_id' => $request->series_id,
             'author_id' => $request->author_id,
             'group_id' => $request->group_id,
@@ -162,7 +158,6 @@ class MangaController extends Controller
             'title'       => $request->title,
             'slug'        => Str::slug($request->title, '-'),
             'description'     => $request->description,
-            'type_id' => $request->type_id,
             'series_id' => $request->series_id,
             'author_id' => $request->author_id,
             'group_id' => $request->group_id,

@@ -10,7 +10,6 @@ use App\Models\Genre;
 use App\Models\Group;
 use App\Models\Manga;
 use App\Models\Series;
-use App\Models\Type;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -29,7 +28,6 @@ class DashboardController extends Controller
         $groups      = Group::count();
         $mangas      = Manga::count();
         $series      = Series::count();
-        $types      = Type::count();
 
 
         return response()->json([
@@ -43,7 +41,6 @@ class DashboardController extends Controller
                 'groups'      => $groups,
                 'mangas'      => $mangas,
                 'series'      => $series,
-                'types'      => $types,
             ],
         ], 200);
     }

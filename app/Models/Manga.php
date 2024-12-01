@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
 class Manga extends Model
 {
     protected $fillable = [
-        'title', 'slug', 'description', 'type_id', 'series_id', 'author_id', 'group_id', 'status', 'image'
+        'title', 'slug', 'description', 'series_id', 'author_id', 'group_id', 'status', 'image'
     ];
 
     public function genres()
@@ -46,11 +46,6 @@ class Manga extends Model
         return $this->belongsTo(Author::class);
     }
 
-    public function type()
-    {
-        return $this->belongsTo(Type::class);
-    }
-
     protected function image(): Attribute
     {
         return Attribute::make(
@@ -66,9 +61,14 @@ class Manga extends Model
     protected function createdAt(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->locale('id')->translatedFormat('l, d F Y'),
+            get: fn ($value) => Carbon::parse($value)
+                ->setTimezone('Asia/Jakarta') // Set waktu ke zona Jakarta (WIB)
+                ->locale('id') // Set lokal ke Indonesia
+                ->translatedFormat('l, d F Y, H:i T') // Format sesuai kebutuhan
         );
     }
+
+
 
     /**
      * updatedAt
@@ -78,7 +78,10 @@ class Manga extends Model
     protected function updatedAt(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->locale('id')->translatedFormat('l, d F Y'),
+            get: fn ($value) => Carbon::parse($value)
+                ->setTimezone('Asia/Jakarta') // Set waktu ke zona Jakarta (WIB)
+                ->locale('id') // Set lokal ke Indonesia
+                ->translatedFormat('l, d F Y, H:i T') // Format sesuai kebutuhan
         );
     }
 }
