@@ -132,39 +132,43 @@ public function filterSearch(Request $request)
     return new MangaResource(true, 'List Data Manga', $query);
 }
 
-    public function mangaPublishing()
-    {
-        $mangas = Manga::with('characters', 'genres', 'chapters', 'series', 'group', 'author')
-            ->when(request()->q, function($query) {
-                $query->where('title', 'like', '%' . request()->q . '%');
-            })
-            // Menambahkan filter untuk memastikan manga memiliki minimal 1 chapter
-            ->whereHas('chapters', function($query) {
-                $query->where('id', '>', 0); // Pastikan manga memiliki chapter
-            })
-            ->latest()
-            ->paginate(18);
+public function mangaPublishing()
+{
+    $mangas = Manga::with('characters', 'genres', 'chapters', 'series', 'group', 'author')
+        ->when(request()->q, function($query) {
+            $query->where('title', 'like', '%' . request()->q . '%');
+        })
+        // Menambahkan filter untuk memastikan manga memiliki minimal 1 chapter
+        ->whereHas('chapters', function($query) {
+            $query->where('id', '>', 0); // Pastikan manga memiliki chapter
+        })
+        ->where('status', 'publishing') // Filter untuk status 'publishing'
+        ->latest()
+        ->paginate(18);
 
-        //return with Api Resource
-        return new MangaResource(true, 'List Data Manga', $mangas);
-    }
+    //return with Api Resource
+    return new MangaResource(true, 'List Data Manga', $mangas);
+}
 
-    public function mangaFinished()
-    {
-        $mangas = Manga::with('characters', 'genres', 'chapters', 'series', 'group', 'author')
-            ->when(request()->q, function($query) {
-                $query->where('title', 'like', '%' . request()->q . '%');
-            })
-            // Menambahkan filter untuk memastikan manga memiliki minimal 1 chapter
-            ->whereHas('chapters', function($query) {
-                $query->where('id', '>', 0); // Pastikan manga memiliki chapter
-            })
-            ->latest()
-            ->paginate(18);
 
-        //return with Api Resource
-        return new MangaResource(true, 'List Data Manga', $mangas);
-    }
+public function mangaFinished()
+{
+    $mangas = Manga::with('characters', 'genres', 'chapters', 'series', 'group', 'author')
+        ->when(request()->q, function($query) {
+            $query->where('title', 'like', '%' . request()->q . '%');
+        })
+        // Menambahkan filter untuk memastikan manga memiliki minimal 1 chapter
+        ->whereHas('chapters', function($query) {
+            $query->where('id', '>', 0); // Pastikan manga memiliki chapter
+        })
+        ->where('status', 'finished') // Filter untuk status 'finished'
+        ->latest()
+        ->paginate(18);
+
+    //return with Api Resource
+    return new MangaResource(true, 'List Data Manga', $mangas);
+}
+
 
     /**
      * show
